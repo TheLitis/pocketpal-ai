@@ -943,6 +943,7 @@
         "copy": "Copy",
         "copyAs": "Copy as",
         "copyClean": "Clean text",
+        "copyCleanWithThinking": "Clean + thinking",
         "copyMarkdown": "Markdown",
         "copyRaw": "Raw text",
         "regenerate": "Regenerate",
