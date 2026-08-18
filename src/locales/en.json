@@ -108,7 +108,7 @@
     "renderMarkdown": "Render Markdown",
     "renderMarkdownDescription": "Format assistant answers with headings, lists, links, code blocks, and tables.",
     "renderLatex": "Render LaTeX",
-    "renderLatexDescription": "Render inline and block math locally with a safe fallback.",
+    "renderLatexDescription": "Render inline and block math locally with KaTeX, with a safe text fallback.",
     "renderTables": "Render Tables",
     "renderTablesDescription": "Render GitHub-style tables with horizontal scrolling.",
     "showThinkingBlocks": "Show Thinking Blocks",

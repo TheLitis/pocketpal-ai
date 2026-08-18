@@ -84,10 +84,12 @@ describe('message rendering parser', () => {
   it('preserves escaped dollars and renders supported math delimiters', () => {
     const prepared = prepareMarkdownForRender(
       `${goldenMessages.inlineLatex}\n\n${goldenMessages.blockLatex}\n\n${goldenMessages.escapedDollar}`,
+      {maxWidth: 276},
     );
 
     expect(prepared).toContain('data-pp-math="inline"');
     expect(prepared).toContain('data-pp-math="block"');
+    expect(prepared).toContain('data-max-width="276"');
     expect(prepared).toContain('\\$5');
   });
 

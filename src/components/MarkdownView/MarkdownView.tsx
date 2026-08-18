@@ -70,6 +70,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
         return marked(
           prepareMarkdownForRender(markdownInput, {
             renderLatex: effectiveRenderLatex,
+            maxWidth: maxMessageWidth,
           }),
         ) as string;
       } catch {
@@ -79,6 +80,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
       effectiveRenderLatex,
       effectiveRenderTables,
       markdownText,
+      maxMessageWidth,
       renderLimits.usePlainTextFallback,
       renderMarkdown,
     ]);

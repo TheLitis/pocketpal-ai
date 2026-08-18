@@ -86,10 +86,10 @@ function encodeMathNodeContent(content: string): string {
   return escapeHtml(content.trim());
 }
 
-function mathNode(kind: 'inline' | 'block', content: string) {
+function mathNode(kind: 'inline' | 'block', content: string, maxWidth: number) {
   const source = encodeMathNodeContent(content);
   const tag = kind === 'inline' ? 'span' : 'div';
-  return `<${tag} data-pp-math="${kind}" data-source="${source}">${source}</${tag}>`;
+  return `<${tag} data-pp-math="${kind}" data-max-width="${maxWidth}" data-source="${source}">${source}</${tag}>`;
 }
 
 function isEscaped(text: string, index: number): boolean {
@@ -100,17 +100,19 @@ function isEscaped(text: string, index: number): boolean {
   return slashCount % 2 === 1;
 }
 
-function replaceBracketMath(text: string): string {
+function replaceBracketMath(text: string, maxWidth: number): string {
   return text
     .replace(/\\\[([\s\S]*?)\\\]/g, (_match, content) =>
-      mathNode('block', content),
+      mathNode('block', content, maxWidth),
     )
     .replace(/\\\(([\s\S]*?)\\\)/g, (_match, content) =>
-      content.includes('\n') ? `\\(${content}\\)` : mathNode('inline', content),
+      content.includes('\n')
+        ? `\\(${content}\\)`
+        : mathNode('inline', content, maxWidth),
     );
 }
 
-function replaceDollarMath(text: string): string {
+function replaceDollarMath(text: string, maxWidth: number): string {
   let output = '';
   let index = 0;
 
@@ -134,7 +136,7 @@ function replaceDollarMath(text: string): string {
     }
 
     output += text.slice(index, blockStart);
-    output += mathNode('block', text.slice(blockStart + 2, blockEnd));
+    output += mathNode('block', text.slice(blockStart + 2, blockEnd), maxWidth);
     index = blockEnd + 2;
   }
 
@@ -166,7 +168,7 @@ function replaceDollarMath(text: string): string {
       output += text.slice(index, end + 1);
     } else {
       output += text.slice(index, start);
-      output += mathNode('inline', content);
+      output += mathNode('inline', content, maxWidth);
     }
     index = end + 1;
   }
@@ -174,13 +176,16 @@ function replaceDollarMath(text: string): string {
   return output;
 }
 
-function injectMath(text: string): string {
-  return replaceDollarMath(replaceBracketMath(text));
+function injectMath(text: string, maxWidth: number): string {
+  return replaceDollarMath(replaceBracketMath(text, maxWidth), maxWidth);
 }
 
 export function prepareMarkdownForRender(
   markdown: string,
-  {renderLatex = true}: {renderLatex?: boolean} = {},
+  {
+    renderLatex = true,
+    maxWidth = 320,
+  }: {renderLatex?: boolean; maxWidth?: number} = {},
 ): string {
   const protectedMarkdown = protectCode(markdown);
   let text = protectedMarkdown.text;
@@ -188,7 +193,7 @@ export function prepareMarkdownForRender(
   text = removeRemoteImages(text);
   text = escapeUnsafeHtml(text);
   if (renderLatex) {
-    text = injectMath(text);
+    text = injectMath(text, Math.max(24, Math.floor(maxWidth)));
   }
 
   return restoreCode(text, protectedMarkdown.placeholders);
