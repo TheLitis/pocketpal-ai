@@ -90,6 +90,8 @@ describe('message rendering parser', () => {
     expect(prepared).toContain('data-pp-math="inline"');
     expect(prepared).toContain('data-pp-math="block"');
     expect(prepared).toContain('data-max-width="276"');
+    expect(prepared).not.toContain('<span data-pp-math=');
+    expect(prepared).toContain('<div data-pp-math="inline"');
     expect(prepared).toContain('\\$5');
   });
 

@@ -88,8 +88,11 @@ function encodeMathNodeContent(content: string): string {
 
 function mathNode(kind: 'inline' | 'block', content: string, maxWidth: number) {
   const source = encodeMathNodeContent(content);
-  const tag = kind === 'inline' ? 'span' : 'div';
-  return `<${tag} data-pp-math="${kind}" data-max-width="${maxWidth}" data-source="${source}">${source}</${tag}>`;
+  // A WebView is a native View, which React Native cannot mount inside the
+  // Text tree used for HTML <span> elements. Keep every KaTeX host a block
+  // DOM node even for inline delimiters. The formula itself stays compact;
+  // only its native layout boundary is block-level.
+  return `<div data-pp-math="${kind}" data-max-width="${maxWidth}" data-source="${source}">${source}</div>`;
 }
 
 function isEscaped(text: string, index: number): boolean {

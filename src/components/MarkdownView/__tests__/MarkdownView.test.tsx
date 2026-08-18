@@ -137,6 +137,14 @@ describe('MarkdownView Component', () => {
     const webView = getByTestId('mock-webview');
     expect(webView.props.source.html).toContain('class="katex"');
     expect(webView.props.source.baseUrl).toBe('about:blank');
+
+    // WebView is a native View. Inline TeX is represented by a block DOM
+    // host so it can never become a child of React Native Text.
+    let parent = webView.parent;
+    while (parent) {
+      expect(parent.type).not.toBe('Text');
+      parent = parent.parent;
+    }
   });
 
   it('keeps math as text when LaTeX rendering is disabled', () => {
