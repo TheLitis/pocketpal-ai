@@ -167,7 +167,7 @@ describe('verify-fonts.js', () => {
     // Latin Extended-A, which the bundled Fraunces subset does not carry,
     // so headlines would render with missing glyphs.
     const src = fs.readFileSync(TYPOGRAPHY_PATH, 'utf-8');
-    const withoutPl = src.replace(/^\s*'pl',\n/m, '');
+    const withoutPl = src.replace(/^\s*'pl',\r?\n/m, '');
     expect(withoutPl).not.toBe(src);
     const result = runWithOverrides({
       files: {'src/theme/tokens/typography.ts': withoutPl},
