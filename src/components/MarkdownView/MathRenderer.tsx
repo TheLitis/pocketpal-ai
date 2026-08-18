@@ -4,7 +4,9 @@ import {ScrollView, StyleSheet, Text} from 'react-native';
 import {useTheme} from '../../hooks';
 import {decodeHtmlEntities} from '../../utils/messageRendering';
 
-/** Styled TeX fallback used until the local KaTeX implementation is enabled. */
+import {KaTeXMathView, renderKaTeX} from './KaTeXMathView';
+
+/** Styled TeX fallback when KaTeX is disabled, unavailable, or rejects input. */
 export const MathRenderer = ({TDefaultRenderer, ...props}: any) => {
   const theme = useTheme();
   const styles = StyleSheet.create({
@@ -26,19 +28,33 @@ export const MathRenderer = ({TDefaultRenderer, ...props}: any) => {
   }
 
   const source = decodeHtmlEntities(attributes['data-source'] || '');
-  if (kind === 'inline') {
-    return (
-      <Text selectable style={styles.inline}>
-        {source}
-      </Text>
-    );
-  }
-
-  return (
+  const displayMode = kind === 'block';
+  const maxWidth = Number(attributes['data-max-width']) || 320;
+  const fallback = displayMode ? (
     <ScrollView horizontal nestedScrollEnabled showsHorizontalScrollIndicator>
       <Text selectable style={styles.block}>
         {source}
       </Text>
     </ScrollView>
+  ) : (
+    <Text selectable style={styles.inline}>
+      {source}
+    </Text>
+  );
+  const mathHtml = renderKaTeX(source, displayMode);
+
+  if (!mathHtml) {
+    return fallback;
+  }
+
+  return (
+    <KaTeXMathView
+      source={source}
+      mathHtml={mathHtml}
+      displayMode={displayMode}
+      maxWidth={maxWidth}
+      color={theme.colors.text}
+      fallback={fallback}
+    />
   );
 };

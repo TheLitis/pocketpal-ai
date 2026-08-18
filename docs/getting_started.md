@@ -83,17 +83,23 @@ The generation performance metric is also displayed. If interested, watch the ch
     <img src="../assets/chat_2.webp" alt="Download a Model" style="width: 33%;">
 </div>
 
+### Rich Assistant Responses
+
+Assistant responses can render Markdown headings, emphasis, lists, links, blockquotes, task lists, code blocks, and GitHub-style tables. Long code blocks, tables, and display equations scroll horizontally when needed.
+
+LaTeX is rendered locally with KaTeX. Supported math delimiters are inline `$...$` and `\(...\)`, plus display `$$...$$` and `\[...\]`. The renderer never fetches formula resources from the network. Incomplete or unsupported formulas safely fall back to their original TeX text, which is useful while a response is still streaming.
+
+For safety, model-provided HTML is escaped rather than executed, remote Markdown images are not loaded, and links open only after a user tap. You can turn Markdown, LaTeX, or table rendering off in Message Rendering settings at any time.
+
 ### Copying Text
 
-Important Note: As of now, I haven’t found an easy way to select and copy text from the generated responses while preserving the text formatting, particularly Markdown support.
+Use the copy control on an assistant message to copy the full response. Message Rendering settings choose the default copy format:
 
-In the meantime, here are the current options for copying text:
-- Paragraph-level copying: Long-press on a specific paragraph to copy its content.
-- Full response copying: Use the copy icon at the bottom of the text bubble to copy the entire AI-generated response.
+- **Clean** excludes thinking blocks and model-template tokens.
+- **Markdown** preserves Markdown source for sharing or editing.
+- **Raw** preserves the original model output, including service tokens and thinking tags.
 
-I know these options might not be ideal, and this is one of my frustrations with using other apps. The difficulty of copying portions of text used to be a particularly annoying aspect of chat apps like ChatGPT and others.
-
-**Developers**: PocketPal AI is built using React Native. Finding an easy solution that balances text selection with preserved formatting (especially Markdown support) has been tricky for me. If you have experience in this area, I’d love to hear from you!
+Code blocks, rendered tables, structured JSON/XML blocks, and math expressions also expose their own copy actions. Long-pressing selectable text remains available for paragraph-level copying where supported by the platform.
 
 ## Feedback Welcome!
 

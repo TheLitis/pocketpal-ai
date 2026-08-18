@@ -126,15 +126,30 @@ describe('MarkdownView Component', () => {
     expect(getByText('**literal markdown**')).toBeTruthy();
   });
 
-  it('renders supported inline math through the math renderer fallback', () => {
-    const {getByText} = render(
+  it('renders supported inline math through the local KaTeX renderer', () => {
+    const {getByTestId} = render(
       <MarkdownView
         markdownText="Energy is $E = mc^2$."
         maxMessageWidth={300}
       />,
     );
 
-    expect(getByText('E = mc^2')).toBeTruthy();
+    const webView = getByTestId('mock-webview');
+    expect(webView.props.source.html).toContain('class="katex"');
+    expect(webView.props.source.baseUrl).toBe('about:blank');
+  });
+
+  it('keeps math as text when LaTeX rendering is disabled', () => {
+    const {getByText, queryByTestId} = render(
+      <MarkdownView
+        markdownText="Energy is $E = mc^2$."
+        maxMessageWidth={300}
+        renderLatex={false}
+      />,
+    );
+
+    expect(getByText('Energy is $E = mc^2$.')).toBeTruthy();
+    expect(queryByTestId('mock-webview')).toBeNull();
   });
 
   describe('Link Rendering', () => {
