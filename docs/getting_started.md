@@ -91,6 +91,8 @@ LaTeX is rendered locally with KaTeX. Supported math delimiters are inline `$...
 
 For safety, model-provided HTML is escaped rather than executed, remote Markdown images are not loaded, and links open only after a user tap. You can turn Markdown, LaTeX, or table rendering off in Message Rendering settings at any time.
 
+Developers can run `corepack yarn preview:renderer` to generate a local desktop preview at `build/message-renderer-preview.html`. It uses only bundled dependencies and can be opened directly in a browser to inspect light/dark layouts and narrow widths without a device.
+
 ### Copying Text
 
 Use the copy control on an assistant message to copy the full response. Message Rendering settings choose the default copy format:
